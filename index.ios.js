@@ -28,26 +28,6 @@ generateCards = () => {
   }
 };
 
-handleFoundSet = () => {
-  currentCards = currentCards.filter(el => {
-    let shouldReturn = true;
-    selectedCards.forEach(card => {
-      if(card.id === el.id){
-        shouldReturn = false;
-      }
-    });
-    if(shouldReturn) return el;
-	});
-
-  usedCards = usedCards.concat(selectedCards);
-
-  selectedCards = [];
-
-  for(let i = 0; i < 3; i++){
-    currentCards.push(allTheCards.pop());
-  }
-};
-
 generateCards();
 
 class Card extends Component {
@@ -55,9 +35,31 @@ class Card extends Component {
     super(props);
   }
 
+  handleChange() {
+    (this.props.handlePress.bind(this))(this.props.card);
+  }
+
+  // handleChange() {
+ //     (this.props.handlePress.bind(this))(this.props.card);
+ //     let style = _.extend({}, this.state.style);
+ //     style.backgroundColor = (style.backgroundColor === 'white' ? '#CCC' : 'white');
+ //     this.setState({style});
+ //   }
+ //
+ //   render() {
+ //     if(this.props.card){
+ //       return (
+ //         <TouchableHighlight style={this.state.style} onPress={this.handleChange.bind(this)}>
+ //           <Image
+ //             source={this.props.card.img} resizeMode='center' style={styles.image}
+ //           />
+ //         </TouchableHighlight>
+ //       );
+
   render() {
+    let backgroundColor = "hello";
       return (
-        <TouchableHighlight style={this.props.styles}>
+        <TouchableHighlight style={this.props.styles} onPress={this.handleChange.bind(this)}>
           <Image
             source={this.props.card.img} resizeMode='center' style={this.props.styles}
           />
@@ -76,7 +78,9 @@ class SetProject extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cardArray: [{id: 1, backgroundColor: 'green', color: 'red', selected: false, number: 1, fill: 'empty', shape: 'oval', img: require('/Users/michaelmcgough/Desktop/Coding/SideProjects/SetProject/cardImages/ovals/1-red-empty-oval.png'), id: 1}]
+      // put things in state that you need to rerender
+      cardArray: currentCards.slice(),
+      selectedCards: []
     }
   }
 
@@ -90,23 +94,74 @@ class SetProject extends Component {
     this.setState({cardArray: newCardArray});
   }
 
-  render() {
+  handlePress(card){
+    let newCardArray;
+    if(card.selected === false){
+      card.selected = true;
+      newCardArray = this.state.selectedCards.slice();
+      newCardArray.push(card);
+      this.setState({selectedCards: newCardArray});
+    } else {
+      card.selected = false;
+      newCardArray = this.state.selectedCards.slice();
+      newCardArray = newCardArray.filter( el => el !== card);
+      this.setState({selectedCards: newCardArray});
+    }
+    console.log('selectedCards.length: ', this.state.selectedCards.length, newCardArray.length);
+    if(newCardArray.length === 3 && Helpers.checkForSet(newCardArray)){
+      this.handleFoundSet();
+    }
+    this.forceUpdate();
+  }
 
-    let cardStyle = {
-     flex: 1,
-     justifyContent: 'center',
-     alignItems: 'center',
-     margin: 5,
-     width: 90,
-     height: 100,
-     borderWidth: 1,
-     backgroundColor: null
+  handleFoundSet(){
+    console.log('found set!')
+    let newCardArray = this.state.cardArray.filter(el => {
+      let shouldReturn = true;
+      this.state.selectedCards.forEach(card => {
+        if(card.id === el.id){
+          shouldReturn = false;
+        }
+      });
+      if(shouldReturn) return el;
+  	});
+
+
+    usedCards = usedCards.concat(this.state.selectedCards);
+
+    this.setState({selectedCards: []});
+
+    for(let i = 0; i < 3; i++){
+      newCardArray.push(allTheCards.pop());
     }
 
-    let cardElementArray = currentCards.map((card, i)=>{
-      cardStyle.backgroundColor = card.backgroundColor;
+    this.setState({cardArray: newCardArray});
+
+  };
+
+  render() {
+    console.log('rendered')
+
+    let cardElementArray = this.state.cardArray.map((card, i)=>{
+      let cardStyle = {
+         flex: 1,
+         justifyContent: 'center',
+         alignItems: 'center',
+         margin: 5,
+         width: 90,
+         height: 100,
+         borderWidth: 1,
+         backgroundColor: null
+      };
+
+      console.log('card.selected:', card.selected)
+      if(card.selected){
+        cardStyle.backgroundColor = '#CCC'
+      } else {
+        cardStyle.backgroundColor = 'white'
+      }
       return (
-        <Card card={card} styles={cardStyle} key={i}></Card>
+        <Card card={card} styles={cardStyle} key={i} handlePress={this.handlePress.bind(this)}></Card>
       )
     })
 

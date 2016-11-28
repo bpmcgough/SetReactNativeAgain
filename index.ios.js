@@ -361,7 +361,7 @@ AppRegistry.registerComponent('SetProject', () => SetProject);
 //           {cardsArray}
 //         </View>
 //         <TouchableHighlight onPress={this.generateCards.bind(this)} style={styles.submit}>
-//           <Text style={styles.welcome}>Shit Fuck</Text>
+//           <Text style={styles.welcome}>Reset</Text>
 //         </TouchableHighlight>
 //       </View>
 //     );

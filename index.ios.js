@@ -35,13 +35,13 @@ class Card extends Component {
     super(props);
   }
 
-  handleChange() {
+  handlePress() {
     (this.props.handlePress.bind(this))(this.props.card);
   }
 
   render() {
       return (
-        <TouchableHighlight style={this.props.styles} onPress={this.handleChange.bind(this)}>
+        <TouchableHighlight style={styles.outerCard} onPress={this.handlePress.bind(this)}>
           <Image
             source={this.props.card.img} resizeMode='center' style={this.props.styles}
           />
@@ -110,15 +110,14 @@ class SetProject extends Component {
   render() {
 
     let cardElementArray = this.state.cardArray.map((card, i)=>{
-      // TODO: Fix this
+      // TODO: Fix this, cardStyle declared 12 times per render
       let cardStyle = {
          flex: 1,
          justifyContent: 'center',
          alignItems: 'center',
          margin: 5,
          width: 90,
-         height: 100,
-         borderWidth: 1,
+         height: 117,
          backgroundColor: null
       };
 
@@ -138,7 +137,7 @@ class SetProject extends Component {
           {cardElementArray}
         </View>
         <TouchableHighlight>
-          <Text onPress={this.reset.bind(this)}>Reset (inactive)</Text>
+          <Text onPress={this.reset.bind(this)}>Reset</Text>
         </TouchableHighlight>
       </View>
     );
@@ -178,15 +177,14 @@ const styles = StyleSheet.create({
     width: 50,
     height: 70
   },
-  card: {
-   flex: 1,
-   justifyContent: 'center',
-   alignItems: 'center',
-   margin: 5,
-   width: 90,
-   height: 100,
-   borderWidth: 1,
-   backgroundColor: "white"
+  outerCard: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 5,
+    width: 90,
+    height: 100,
+    borderWidth: 1
   }
 });
 

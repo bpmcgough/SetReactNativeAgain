@@ -78,21 +78,15 @@ class SetProject extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // put things in state that you need to rerender
       cardArray: currentCards.slice(),
       selectedCards: []
     }
   }
 
-  displayNewCard(){
-    let emptyCardArray = [];
-    this.setState({cardArray: emptyCardArray});
-  }
-
-  changeBackgroundColor(){
-    let newCardArray = [{id: 2, backgroundColor: 'red', color: 'red', selected: false, number: 1, fill: 'empty', shape: 'oval', img: require('/Users/michaelmcgough/Desktop/Coding/SideProjects/SetProject/cardImages/ovals/1-purple-shaded-oval.png'), id: 1, key: 1}]
-    this.setState({cardArray: newCardArray});
-  }
+  // changeBackgroundColor(){
+  //   let newCardArray = []
+  //   this.setState({cardArray: newCardArray});
+  // }
 
   handlePress(card){
     let newCardArray;
@@ -107,27 +101,25 @@ class SetProject extends Component {
       newCardArray = newCardArray.filter( el => el !== card);
       this.setState({selectedCards: newCardArray});
     }
-    console.log('selectedCards.length: ', this.state.selectedCards.length, newCardArray.length);
     if(newCardArray.length === 3 && Helpers.checkForSet(newCardArray)){
-      this.handleFoundSet();
+      this.handleFoundSet(newCardArray);
     }
     this.forceUpdate();
   }
 
-  handleFoundSet(){
-    console.log('found set!')
+  handleFoundSet(selectedCards){
     let newCardArray = this.state.cardArray.filter(el => {
       let shouldReturn = true;
-      this.state.selectedCards.forEach(card => {
+      selectedCards.forEach(card => {
         if(card.id === el.id){
+          console.log('should not return')
           shouldReturn = false;
         }
       });
       if(shouldReturn) return el;
   	});
 
-
-    usedCards = usedCards.concat(this.state.selectedCards);
+    usedCards = usedCards.concat(selectedCards);
 
     this.setState({selectedCards: []});
 
@@ -135,12 +127,13 @@ class SetProject extends Component {
       newCardArray.push(allTheCards.pop());
     }
 
+    console.log('newCardArray.length: ', newCardArray.length)
+
     this.setState({cardArray: newCardArray});
 
   };
 
   render() {
-    console.log('rendered')
 
     let cardElementArray = this.state.cardArray.map((card, i)=>{
       let cardStyle = {
@@ -154,7 +147,6 @@ class SetProject extends Component {
          backgroundColor: null
       };
 
-      console.log('card.selected:', card.selected)
       if(card.selected){
         cardStyle.backgroundColor = '#CCC'
       } else {
@@ -170,11 +162,8 @@ class SetProject extends Component {
         <View style={styles.container}>
           {cardElementArray}
         </View>
-        <TouchableHighlight style={styles.image}>
-          <Text onPress={this.displayNewCard.bind(this)}>Display A Card</Text>
-        </TouchableHighlight>
         <TouchableHighlight>
-          <Text onPress={this.changeBackgroundColor.bind(this)}>Change Background</Text>
+          <Text onPress={console.log('reset')}>Reset (inactive)</Text>
         </TouchableHighlight>
       </View>
     );

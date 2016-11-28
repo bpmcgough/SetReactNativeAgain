@@ -9,6 +9,7 @@
     "classnames": "^2.2.5",
     "react": "15.2.1",
     "react-native": "0.31.0",
+    "react-native-animatable": "^1.0.0",
     "react-native-button": "^1.6.0",
     "underscore": "^1.8.3"
   }

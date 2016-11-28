@@ -12,6 +12,7 @@ import {
 import _ from 'underscore';
 import Helpers from './theDirectory/helpers';
 import Cards from './theDirectory/allTheCards';
+import * as Animatable from 'react-native-animatable';
 
 let allTheCards = Cards;
 let selectedCards = [];
@@ -34,25 +35,25 @@ generateCards();
 class Card extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      toggleOn: false
+    };
   }
 
   componentWillMount() {
     this._animatedValue = new Animated.Value(0);
   }
 
-  // componentDidMount() {
-  //   Animated.timing(this._animatedValue, {
-  //       toValue: 100,
-  //       duration: 3000
-  //   }).start();
-  // }
-
   handlePress() {
+    this._animatedValue = new Animated.Value(0);
     (this.props.handlePress.bind(this))(this.props.card);
-    Animated.timing(this._animatedValue, {
-        toValue: 100,
-        duration: 2000
-    }).start();
+    if(this.props.card.selected){
+      Animated.timing(this._animatedValue, {
+          toValue: 100,
+          duration: 2000
+      }).start();
+    }
+    // this.setState({toggleOn: !this.state.toggleOn});
   }
 
   render() {
@@ -61,12 +62,16 @@ class Card extends Component {
         outputRange: ['0deg', '360deg']
       });
 
+      // let color = this._animatedValue.interpolate({
+      //    inputRange: [0, 300],
+      //    outputRange: ['green', 'blue']
+      // });
+
       return (
         <Animated.View
               style={[{transform: [{rotate: interpolatedRotateAnimation}]}]}
           >
         <TouchableHighlight style={styles.outerCard} onPress={this.handlePress.bind(this)}>
-
             <Image
               source={this.props.card.img} resizeMode='center' style={this.props.styles}
             />
@@ -138,13 +143,15 @@ class SetProject extends Component {
          margin: 5,
          width: 90,
          height: 117,
-         backgroundColor: null
+         backgroundColor: null,
+         borderWidth: 1,
+         borderRadius: 10
       };
 
       if(card.selected){
-        cardStyle.backgroundColor = '#CCC'
+        cardStyle.backgroundColor = '#B0BEC5'
       } else {
-        cardStyle.backgroundColor = 'white'
+        cardStyle.backgroundColor = '#ECEFF1'
       }
       return (
         <Card card={card} styles={cardStyle} key={i} handlePress={this.handlePress.bind(this)}></Card>
@@ -180,7 +187,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    backgroundColor: '#607D8B'
   },
   container: {
     flex: 1,
@@ -205,8 +213,29 @@ const styles = StyleSheet.create({
     margin: 5,
     width: 90,
     height: 117,
-    borderWidth: 1
-  }
+    borderWidth: 1,
+    borderRadius: 10
+  },
+  toggle: {
+   width: 120,
+   backgroundColor: '#333',
+   borderRadius: 3,
+   padding: 5,
+   fontSize: 14,
+   alignSelf: 'center',
+   textAlign: 'center',
+   margin: 10,
+   color: 'rgba(255, 255, 255, 1)',
+   },
+   toggledOn: {
+     color: 'rgba(255, 33, 33, 1)',
+     fontSize: 16,
+     transform: [{
+       rotate: '8deg',
+     }, {
+       translateY: -20,
+     }],
+   },
 });
 
 AppRegistry.registerComponent('SetProject', () => SetProject);

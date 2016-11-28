@@ -80,26 +80,20 @@ class SetProject extends Component {
   }
 
   handleFoundSet(selectedCards){
-    let newCardArray = this.state.cardArray.filter(el => {
+    let newCardArray = this.state.cardArray.map(el => {
       let shouldReturn = true;
       selectedCards.forEach(card => {
         if(card.id === el.id){
           shouldReturn = false;
         }
       });
-      if(shouldReturn) return el;
+      return shouldReturn ? el : allTheCards.pop();
   	});
 
     usedCards = usedCards.concat(selectedCards);
 
     this.setState({selectedCards: []});
-
-    for(let i = 0; i < 3; i++){
-      newCardArray.push(allTheCards.pop());
-    }
-
     this.setState({cardArray: newCardArray});
-
   };
 
   reset(){
@@ -137,7 +131,7 @@ class SetProject extends Component {
           {cardElementArray}
         </View>
         <TouchableHighlight>
-          <Text onPress={this.reset.bind(this)}>Reset</Text>
+          <Text onPress={this.reset.bind(this)}>Reset (Get it?)</Text>
         </TouchableHighlight>
       </View>
     );

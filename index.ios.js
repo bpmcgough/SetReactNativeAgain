@@ -6,7 +6,8 @@ import {
   View,
   TouchableHighlight,
   ListView,
-  Image
+  Image,
+  Animated
 } from 'react-native';
 import _ from 'underscore';
 import Helpers from './theDirectory/helpers';
@@ -35,17 +36,42 @@ class Card extends Component {
     super(props);
   }
 
+  componentWillMount() {
+    this._animatedValue = new Animated.Value(0);
+  }
+
+  // componentDidMount() {
+  //   Animated.timing(this._animatedValue, {
+  //       toValue: 100,
+  //       duration: 3000
+  //   }).start();
+  // }
+
   handlePress() {
     (this.props.handlePress.bind(this))(this.props.card);
+    Animated.timing(this._animatedValue, {
+        toValue: 100,
+        duration: 2000
+    }).start();
   }
 
   render() {
+      let interpolatedRotateAnimation = this._animatedValue.interpolate({
+        inputRange: [0, 100],
+        outputRange: ['0deg', '360deg']
+      });
+
       return (
+        <Animated.View
+              style={[{transform: [{rotate: interpolatedRotateAnimation}]}]}
+          >
         <TouchableHighlight style={styles.outerCard} onPress={this.handlePress.bind(this)}>
-          <Image
-            source={this.props.card.img} resizeMode='center' style={this.props.styles}
-          />
+
+            <Image
+              source={this.props.card.img} resizeMode='center' style={this.props.styles}
+            />
         </TouchableHighlight>
+      </Animated.View>
       )
   }
 }
@@ -125,6 +151,7 @@ class SetProject extends Component {
       )
     })
 
+    //TODO: when set is found, either fade cards out or flip to reveal new ones
     return (
       <View style={styles.overarch}>
         <View style={styles.container}>
@@ -169,7 +196,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 50,
-    height: 70
+    height: 70,
   },
   outerCard: {
     flex: 1,
@@ -177,7 +204,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 5,
     width: 90,
-    height: 100,
+    height: 117,
     borderWidth: 1
   }
 });

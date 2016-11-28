@@ -39,25 +39,7 @@ class Card extends Component {
     (this.props.handlePress.bind(this))(this.props.card);
   }
 
-  // handleChange() {
- //     (this.props.handlePress.bind(this))(this.props.card);
- //     let style = _.extend({}, this.state.style);
- //     style.backgroundColor = (style.backgroundColor === 'white' ? '#CCC' : 'white');
- //     this.setState({style});
- //   }
- //
- //   render() {
- //     if(this.props.card){
- //       return (
- //         <TouchableHighlight style={this.state.style} onPress={this.handleChange.bind(this)}>
- //           <Image
- //             source={this.props.card.img} resizeMode='center' style={styles.image}
- //           />
- //         </TouchableHighlight>
- //       );
-
   render() {
-    let backgroundColor = "hello";
       return (
         <TouchableHighlight style={this.props.styles} onPress={this.handleChange.bind(this)}>
           <Image
@@ -67,11 +49,6 @@ class Card extends Component {
       )
   }
 }
-
-// so here's the goal:
-// show nothing at first
-// make button that, when pressed, displays a card
-// make another button that, when pressed, changes the cards background color
 
 class SetProject extends Component {
 
@@ -107,7 +84,6 @@ class SetProject extends Component {
       let shouldReturn = true;
       selectedCards.forEach(card => {
         if(card.id === el.id){
-          console.log('should not return')
           shouldReturn = false;
         }
       });
@@ -121,8 +97,6 @@ class SetProject extends Component {
     for(let i = 0; i < 3; i++){
       newCardArray.push(allTheCards.pop());
     }
-
-    console.log('newCardArray.length: ', newCardArray.length)
 
     this.setState({cardArray: newCardArray});
 
@@ -186,7 +160,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    // flexWrap: 'wrap',
     flexDirection: 'column'
   },
   container: {
@@ -216,6 +189,5 @@ const styles = StyleSheet.create({
    backgroundColor: "white"
   }
 });
-
 
 AppRegistry.registerComponent('SetProject', () => SetProject);
